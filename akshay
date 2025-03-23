@@ -1,0 +1,214 @@
+
+// Right Rear Wheel Motor
+const int rightWheelEnable = 3;
+const int rightWheelInputA = 2;
+const int rightWheelInputB = 4;
+
+// Left Rear Wheel Motor
+const int leftWheelEnable = 11;
+const int leftWheelInputA = 12;
+const int leftWheelInputB = 13;
+
+// Claw Motor
+const int clawEnable = 5;
+const int clawInputA = 6;
+const int clawInputB = 7;
+
+// Elbow Motor
+const int elbowEnable = 8;
+const int elbowInputA = 9;
+const int elbowInputB = 10;
+
+char command;
+
+void setup() {
+  // Set motor pins as outputs
+  pinMode(rightWheelEnable, OUTPUT);
+  pinMode(rightWheelInputA, OUTPUT);
+  pinMode(rightWheelInputB, OUTPUT);
+  pinMode(leftWheelEnable, OUTPUT);
+  pinMode(leftWheelInputA, OUTPUT);
+  pinMode(leftWheelInputB, OUTPUT);
+  pinMode(clawEnable, OUTPUT);
+  pinMode(clawInputA, OUTPUT);
+  pinMode(clawInputB, OUTPUT);
+  pinMode(elbowEnable, OUTPUT);
+  pinMode(elbowInputA, OUTPUT);
+  pinMode(elbowInputB, OUTPUT);
+
+  // Start with motors stopped
+  stopMotors();
+
+  // Initialize serial communication
+  Serial.begin(9600);
+  Serial.println("Ready and connected");
+}
+
+void loop() {
+  // Check if there is any serial input
+  if (Serial.available()) {
+    command = Serial.read();
+    Serial.print("Received command: ");
+    Serial.println(command);
+
+    // Control motors based on the received command
+    switch (command) {
+      case '1': // Move forward
+         turnLeft();
+        break;
+      case '2': // Move backward
+         turnRight();
+        break;
+      case '3': // Turn left
+       moveForward();
+        break;
+      case '4': // Turn right
+      moveBackward();
+        break;
+      case '5': // Stop motors
+        stopMotors();
+        break;
+      case '6': // Open claw
+        openClaw();
+        break;
+      case '7': // Close claw
+        closeClaw();
+        break;
+      case '8': // Raise elbow
+        raiseElbow();
+        break;
+      case '9': // Lower elbow
+        lowerElbow();
+        break;
+      default:
+        Serial.println("Invalid command");
+        stopMotors();
+        break;
+    }
+  }
+}
+
+// Function to move the robot forward
+void moveForward() {
+  // Right Wheel Forward
+  digitalWrite(rightWheelInputA, HIGH);
+  digitalWrite(rightWheelInputB, LOW);
+  analogWrite(rightWheelEnable, 255); // Full speed
+
+  // Left Wheel Forward
+  digitalWrite(leftWheelInputA, HIGH);
+  digitalWrite(leftWheelInputB, LOW);
+  analogWrite(leftWheelEnable, 255); // Full speed
+
+  Serial.println("turn left");
+}
+
+// Function to move the robot backward
+void moveBackward() {
+  // Right Wheel Backward
+  digitalWrite(rightWheelInputA, LOW);
+  digitalWrite(rightWheelInputB, HIGH);
+  analogWrite(rightWheelEnable, 255); // Full speed
+
+  // Left Wheel Backward
+  digitalWrite(leftWheelInputA, LOW);
+  digitalWrite(leftWheelInputB, HIGH);
+  analogWrite(leftWheelEnable, 255); // Full speed
+
+  Serial.println("turn right");
+}
+
+// Function to turn the robot left
+void turnLeft() {
+  // Right Wheel Forward
+  digitalWrite(rightWheelInputA, HIGH);
+  digitalWrite(rightWheelInputB, LOW);
+  analogWrite(rightWheelEnable, 255); // Full speed
+
+  // Left Wheel Backward
+  digitalWrite(leftWheelInputA, LOW);
+  digitalWrite(leftWheelInputB, HIGH);
+  analogWrite(leftWheelEnable, 255); // Full speed
+
+  Serial.println("moving forward");
+}
+
+// Function to turn the robot right
+void turnRight() {
+  // Right Wheel Backward
+  digitalWrite(rightWheelInputA, LOW);
+  digitalWrite(rightWheelInputB, HIGH);
+  analogWrite(rightWheelEnable, 255); // Full speed
+
+  // Left Wheel Forward
+  digitalWrite(leftWheelInputA, HIGH);
+  digitalWrite(leftWheelInputB, LOW);
+  analogWrite(leftWheelEnable, 255); // Full speed
+
+  Serial.println("moving backward");
+}
+
+// Function to stop all motors
+void stopMotors() {
+  // Stop Right Wheel
+  digitalWrite(rightWheelInputA, LOW);
+  digitalWrite(rightWheelInputB, LOW);
+  analogWrite(rightWheelEnable, 0);
+
+  // Stop Left Wheel
+  digitalWrite(leftWheelInputA, LOW);
+  digitalWrite(leftWheelInputB, LOW);
+  analogWrite(leftWheelEnable, 0);
+
+  // Stop Claw Motor
+  digitalWrite(clawInputA, LOW);
+  digitalWrite(clawInputB, LOW);
+  analogWrite(clawEnable, 0);
+
+  // Stop Elbow Motor
+  digitalWrite(elbowInputA, LOW);
+  digitalWrite(elbowInputB, LOW);
+  analogWrite(elbowEnable, 0);
+
+  Serial.println("Motors Stopped");
+}
+
+// Function to open the claw
+void openClaw() {
+  // Claw Motor Forward
+  digitalWrite(clawInputA, HIGH);
+  digitalWrite(clawInputB, LOW);
+  analogWrite(clawEnable, 255); // Full speed
+
+  Serial.println("Opening Claw");
+}
+
+// Function to close the claw
+void closeClaw() {
+  // Claw Motor Backward
+  digitalWrite(clawInputA, LOW);
+  digitalWrite(clawInputB, HIGH);
+  analogWrite(clawEnable, 255); // Full speed
+
+  Serial.println("Closing Claw");
+}
+
+// Function to raise the elbow
+void raiseElbow() {
+  // Elbow Motor Forward
+  digitalWrite(elbowInputA, HIGH);
+  digitalWrite(elbowInputB, LOW);
+  analogWrite(elbowEnable, 255); // Full speed
+
+  Serial.println("Raising Elbow");
+}
+
+// Function to lower the elbow
+void lowerElbow() {
+  // Elbow Motor Backward
+  digitalWrite(elbowInputA, LOW);
+  digitalWrite(elbowInputB, HIGH);
+  analogWrite(elbowEnable, 255); // Full speed
+
+  Serial.println("Lowering Elbow");
+}
